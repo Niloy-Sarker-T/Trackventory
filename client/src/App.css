@@ -1,0 +1,21 @@
+.App {
+  min-height: 100vh;
+}
+
+.app-public {
+  text-align: center;
+  background: #f8fafc;
+}
+
+.app-dashboard {
+  text-align: left;
+  background: #eef2f6;
+}
+
+a {
+  color: inherit;
+}
+
+table {
+  border-collapse: collapse;
+}
