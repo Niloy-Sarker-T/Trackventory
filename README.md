@@ -9,6 +9,10 @@ A web-based inventory management solution for small shops. Track products, stock
 **Database:** SQLite  
 **Styling:** Tailwind CSS + Material-UI
 
+## 🎥 Demo Video
+
+<video src="demo.mp4" controls width="600"></video>
+
 ## Features
 
 - ✅ Product management (add, update, remove)
