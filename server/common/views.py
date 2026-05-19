@@ -81,7 +81,7 @@ class DashboardAnalyticsView(APIView):
         )
         recent_sales = list(
             Sale.objects.order_by("-created_at")[:6].values(
-                "id", "customer", "total_price", "paid_amount", "due_amount", "created_at"
+                "id", "customer", "total_price", "paid_amount", "due_amount", "profit", "created_at"
             )
         )
         recent_purchases = list(

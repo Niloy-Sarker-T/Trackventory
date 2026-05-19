@@ -20,7 +20,7 @@ const Header = () => {
             <FontAwesomeIcon icon={faBoxesStacked} />
           </span>
           <span className="text-left">
-            <span className="block text-lg font-semibold leading-5">MR Shop</span>
+            <span className="block text-lg font-semibold leading-5">NST Shop</span>
             <span className="hidden text-xs font-medium uppercase tracking-wide text-slate-500 sm:block">
               Inventory Suite
             </span>

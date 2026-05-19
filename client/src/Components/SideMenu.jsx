@@ -90,14 +90,14 @@ const SideMenu = ({ onNavigate }) => {
               letterSpacing: 0,
             }}
           >
-            B
+            MR
           </Box>
           <Box>
             <Typography variant="h5" sx={{ lineHeight: 1 }}>
-              Berry IMS
+              NST Shop Pro
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Django inventory suite
+              Retail operations dashboard
             </Typography>
           </Box>
         </Stack>
@@ -117,7 +117,7 @@ const SideMenu = ({ onNavigate }) => {
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Box>
               <Typography variant="subtitle2">Inventory Health</Typography>
-              <Typography variant="caption">Live API connected</Typography>
+              <Typography variant="caption">Connected</Typography>
             </Box>
             <Chip size="small" label="Online" color="success" />
           </Stack>

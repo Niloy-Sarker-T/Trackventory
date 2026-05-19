@@ -122,6 +122,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [trendMetric, setTrendMetric] = useState("earned");
+  const [trendView, setTrendView] = useState("transactions");
 
   useEffect(() => {
     let isActive = true;
@@ -148,10 +149,10 @@ const Dashboard = () => {
 
   const money = analytics?.money || {};
   const counts = analytics?.counts || {};
-  const topProducts = analytics?.top_products || [];
-  const lowStock = analytics?.low_stock || [];
-  const recentSales = analytics?.recent_sales || [];
-  const recentPurchases = analytics?.recent_purchases || [];
+  const topProducts = useMemo(() => analytics?.top_products || [], [analytics]);
+  const lowStock = useMemo(() => analytics?.low_stock || [], [analytics]);
+  const recentSales = useMemo(() => analytics?.recent_sales || [], [analytics]);
+  const recentPurchases = useMemo(() => analytics?.recent_purchases || [], [analytics]);
 
   const trendRows = useMemo(() => {
     const salesRows = analytics?.sales_by_day || [];
@@ -180,6 +181,34 @@ const Dashboard = () => {
     return Array.from(dates.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [analytics]);
 
+  const transactionRows = useMemo(() => {
+    const salesRows = recentSales.map((item) => ({
+      date: item.created_at,
+      label: `Sale #${item.id}`,
+      earned: numberValue(item.total_price),
+      spent: 0,
+      profit: numberValue(item.profit),
+    }));
+    const purchaseRows = recentPurchases.map((item) => ({
+      date: item.created_at,
+      label: `Bill #${item.bill_no}`,
+      earned: 0,
+      spent: numberValue(item.total),
+      profit: 0,
+    }));
+
+    return [...salesRows, ...purchaseRows]
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(-12);
+  }, [recentSales, recentPurchases]);
+
+  const chartRows = trendView === "daily" ? trendRows : transactionRows;
+  const chartDateKey = trendView === "daily" ? "date" : "label";
+  const chartEmptyText =
+    trendView === "daily"
+      ? "Add sales and purchases on separate dates, or switch Data View to Recent transactions."
+      : "Add at least two sales or purchases to populate this transaction chart.";
+
   const inventoryMix = useMemo(
     () => [
       { name: "Available", value: Math.max(numberValue(counts.stock_items) - lowStock.length, 0) },
@@ -203,9 +232,9 @@ const Dashboard = () => {
     <Box>
       <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={2} sx={{ mb: 3 }}>
         <Box>
-          <Typography variant="h3">Inventory Dashboard</Typography>
+          <Typography variant="h3">Trackventory Dashboard</Typography>
           <Typography color="text.secondary" sx={{ mt: 0.75 }}>
-            Berry-style control center connected to your Django REST inventory API.
+            Professional inventory control center for sales, stock, purchasing, and cash flow.
           </Typography>
         </Box>
         <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
@@ -250,7 +279,7 @@ const Dashboard = () => {
           <StatCard
             title="Profit"
             value={formatMoney(money.profit)}
-            subtitle="Revenue minus purchase cost"
+            subtitle=""
             color="secondary"
             icon={<TrendingUpRoundedIcon />}
           />
@@ -272,25 +301,36 @@ const Dashboard = () => {
                 <Box>
                   <Typography variant="h5">Performance Overview</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Earned, spent, and profit trend by transaction date.
+                    Compare earned, spent, and profit by recent transactions or daily summary.
                   </Typography>
                 </Box>
-                <Select
-                  size="small"
-                  value={trendMetric}
-                  onChange={(event) => setTrendMetric(event.target.value)}
-                  sx={{ minWidth: 140 }}
-                >
-                  <MenuItem value="earned">Earned</MenuItem>
-                  <MenuItem value="spent">Spent</MenuItem>
-                  <MenuItem value="profit">Profit</MenuItem>
-                </Select>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                  <Select
+                    size="small"
+                    value={trendView}
+                    onChange={(event) => setTrendView(event.target.value)}
+                    sx={{ minWidth: 180 }}
+                  >
+                    <MenuItem value="transactions">Recent transactions</MenuItem>
+                    <MenuItem value="daily">Daily summary</MenuItem>
+                  </Select>
+                  <Select
+                    size="small"
+                    value={trendMetric}
+                    onChange={(event) => setTrendMetric(event.target.value)}
+                    sx={{ minWidth: 140 }}
+                  >
+                    <MenuItem value="earned">Earned</MenuItem>
+                    <MenuItem value="spent">Spent</MenuItem>
+                    <MenuItem value="profit">Profit</MenuItem>
+                  </Select>
+                </Stack>
               </Stack>
 
-              {trendRows.length > 1 ? (
+              {chartRows.length > 1 ? (
                 <Box sx={{ height: 330 }}>
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={trendRows} margin={{ top: 12, right: 24, bottom: 0, left: 0 }}>
+                    <AreaChart data={chartRows} margin={{ top: 12, right: 24, bottom: 0, left: 0 }}>
                       <defs>
                         <linearGradient id="berryTrend" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor={theme.palette.primary.main} stopOpacity={0.28} />
@@ -298,11 +338,20 @@ const Dashboard = () => {
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme.palette.divider} />
-                      <XAxis dataKey="date" tickFormatter={formatDate} tickLine={false} axisLine={false} />
+                      <XAxis
+                        dataKey={chartDateKey}
+                        tickFormatter={trendView === "daily" ? formatDate : (value) => value}
+                        tickLine={false}
+                        axisLine={false}
+                      />
                       <YAxis tickFormatter={compactMoney} tickLine={false} axisLine={false} />
                       <Tooltip
                         formatter={(value) => formatMoney(value)}
-                        labelFormatter={formatDate}
+                        labelFormatter={(label, payload) =>
+                          trendView === "daily"
+                            ? formatDate(label)
+                            : `${label} - ${formatDate(payload?.[0]?.payload?.date)}`
+                        }
                         contentStyle={{ borderRadius: 8, borderColor: theme.palette.divider }}
                       />
                       <Area
@@ -316,7 +365,7 @@ const Dashboard = () => {
                   </ResponsiveContainer>
                 </Box>
               ) : (
-                <EmptyState>Add sales and purchases on separate dates to populate this chart.</EmptyState>
+                <EmptyState>{chartEmptyText}</EmptyState>
               )}
             </CardContent>
           </Card>
