@@ -20,29 +20,7 @@ A web-based inventory management solution for small shops. Track products, stock
 - ✅ Sales & purchase reports
 - ✅ Low stock alerts
 
-## Quick Start
 
-### Backend
-
-```powershell
-cd server
-py -3 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe manage.py migrate
-.\.venv\Scripts\python.exe manage.py runserver
-```
-
-API runs at `http://127.0.0.1:8000`
-
-### Frontend
-
-```powershell
-cd client
-npm install
-npm start
-```
-
-App runs at `http://localhost:3000/dashboard`
 
 ## Usage
 
@@ -73,6 +51,4 @@ client/          # React dashboard
 └── Pages/       # Main layout & routing
 ```
 
-## Status
 
-🚀 **In Development** - Core features working, continuous improvements ongoing
