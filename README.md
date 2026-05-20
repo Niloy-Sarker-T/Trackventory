@@ -15,6 +15,15 @@ A web-based inventory management solution for small shops. Track products, stock
 
 [![Inventory Shop Demo](https://img.youtube.com/vi/LgKUkrJmiNQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=LgKUkrJmiNQ)
 
+## 📸 Demos
+
+### Image 1
+![Pic](pic.jpg)
+
+### Image 2
+![Pic 1](pic1.jpg)
+
+
 ## Features
 
 - ✅ Product management (add, update, remove)
