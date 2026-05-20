@@ -21,7 +21,7 @@ A web-based inventory management solution for small shops. Track products, stock
 ![Pic](pic.jpg)
 
 ### Image 2
-![Pic 1](pic1.jpg)
+![Pic 1](pic_1.jpg)
 
 
 ## Features
