@@ -29,13 +29,13 @@ class Command(BaseCommand):
         milk = Product.objects.create(name="Milk Powder")
 
         # ---------------- STOCK ----------------
-        Stock.objects.create(product=rice, purchase_price=420, selling_price=500, quantity=20)
-        Stock.objects.create(product=oil, purchase_price=160, selling_price=185, quantity=12)
-        Stock.objects.create(product=sugar, purchase_price=105, selling_price=125, quantity=4)
-        Stock.objects.create(product=flour, purchase_price=130, selling_price=160, quantity=8)
-        Stock.objects.create(product=salt, purchase_price=25, selling_price=35, quantity=50)
-        Stock.objects.create(product=tea, purchase_price=90, selling_price=120, quantity=15)
-        Stock.objects.create(product=milk, purchase_price=300, selling_price=350, quantity=10)
+        Stock.objects.create(product=rice, unit_purchase_price=420, unit_selling_price=500, quantity=20)
+        Stock.objects.create(product=oil, unit_purchase_price=160, unit_selling_price=185, quantity=12)
+        Stock.objects.create(product=sugar, unit_purchase_price=105, unit_selling_price=125, quantity=4)
+        Stock.objects.create(product=flour, unit_purchase_price=130, unit_selling_price=160, quantity=8)
+        Stock.objects.create(product=salt, unit_purchase_price=25, unit_selling_price=35, quantity=50)
+        Stock.objects.create(product=tea, unit_purchase_price=90, unit_selling_price=120, quantity=15)
+        Stock.objects.create(product=milk, unit_purchase_price=300, unit_selling_price=350, quantity=10)
 
         # ---------------- PURCHASES ----------------
         Purchase.objects.create(product=rice, quantity=20, total=8400)
